@@ -1,0 +1,35 @@
+{
+  "xtest": {
+    "master" : {
+      "auth":{
+          "tag":"master",
+          "username":"z",
+          "password":"!QAZ2wsx",
+          "dbname":"xdemo",
+          "args":"charset=utf8&loc=Asia%2FShanghai",
+          "max_idle": 50,
+          "max_open": 100
+      },
+      "services":{
+        "dns_type":"qconf",
+        "dns_name":"/name_service/mysql.user"
+      }
+    },
+    "slave" : {
+      "auth":{
+        "tag":"slave",
+        "username":"z",
+        "password":"!QAZ2wsx",
+        "dbname":"xdemo",
+        "args":"charset=utf8&loc=Asia%2FShanghai",
+        "max_idle": 50,
+        "max_open": 100
+      },
+      "services":{
+        "dns_type":"qconf",
+        "dns_name":"/name_service/mysql.user"
+      }
+    }
+  }
+}
+

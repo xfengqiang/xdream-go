@@ -1,0 +1,45 @@
+{
+  "xtest": {
+    "master" : {
+      "auth":{
+          "tag":"master",
+          "username":"z",
+          "password":"!QAZ2wsx",
+          "dbname":"xdemo",
+          "args":"charset=utf8&loc=Asia%2FShanghai",
+          "max_idle": 50,
+          "max_open": 100
+      },
+      "services":{
+        "dns_type":"raw",
+        "instances":[
+          {
+            "ip":"127.0.0.1",
+            "port":3306
+          }
+        ]
+      }
+    },
+    "slave" : {
+      "auth":{
+        "tag":"slave",
+        "username":"z",
+        "password":"!QAZ2wsx",
+        "dbname":"xdemo",
+        "args":"charset=utf8&loc=Asia%2FShanghai",
+        "max_idle": 50,
+        "max_open": 100
+      },
+      "services":{
+        "dns_type":"raw",
+        "instances":[
+          {
+            "ip":"127.0.0.1",
+            "port":3306
+          }
+        ]
+      }
+    }
+  }
+}
+

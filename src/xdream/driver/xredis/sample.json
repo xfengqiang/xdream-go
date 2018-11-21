@@ -1,0 +1,21 @@
+{
+  "topic":{
+    "auth":{
+      "prefix": "xxx",
+      "max_idle": 10,
+      "idle_timeout": 3600000,
+      "connect_timeout":1000,
+      "read_timeout":1000,
+      "write_timeout":1000
+    },
+    "services":{
+      "dns_type":"raw",
+      "instances":[
+        {
+          "ip":"127.0.0.1",
+          "port":6379
+        }
+      ]
+    }
+  }
+}
