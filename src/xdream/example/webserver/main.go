@@ -13,6 +13,9 @@ import (
 
 
 func main() {
+	web.App.Logger().SetOutput()
+	web.App.Logger().Warnf()
+
 	//自定义panic处理函数
 	web.App.Use(myrecover())
 	web.App.Use(middleware.GloabalHandler)

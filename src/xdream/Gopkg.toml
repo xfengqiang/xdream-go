@@ -33,7 +33,6 @@
   name = "github.com/gomodule/redigo"
   version = "2.0.0"
 
-
 [prune]
   go-tests = true
   unused-packages = true
