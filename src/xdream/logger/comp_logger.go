@@ -5,31 +5,40 @@ import (
 	"go.uber.org/zap"
 )
 
-type Logger struct{
-	Component string //组件名
-	Enabled bool //是否启用
-	Level int //日志级别
+type CompLogger struct{
+	Name string `json:"name"`//组件名
+	Enabled bool `json:"enabled"`//是否启用
+	Level string `json:"level"`//日志级别
+	zapLevel zapcore.Level
 }
 
-func (l *Logger)Write(p []byte) (n int, err error)  {
-	if g_logger == nil {
+func (l *CompLogger)Write(p []byte) (n int, err error)  {
+	if ZLogger == nil {
 		return 0, nil
 	}
 
-	level := zapcore.Level(l.Level)
+	if !l.Enabled {
+		return
+	}
 
-	switch level {
+	switch l.zapLevel {
 	case zapcore.DebugLevel:
-		g_logger.Debug("", zap.String("component", l.Component), zap.ByteString("msg", p))
+		ZLogger.Debug("", zap.String("comp", l.Name), zap.ByteString("msg", p))
 	case zapcore.InfoLevel:
-		g_logger.Info("", zap.String("component", l.Component), zap.ByteString("msg", p))
+		ZLogger.Info("", zap.String("comp", l.Name), zap.ByteString("msg", p))
 	case zapcore.WarnLevel:
-		g_logger.Warn("", zap.String("component", l.Component), zap.ByteString("msg", p))
+		ZLogger.Warn("", zap.String("comp", l.Name), zap.ByteString("msg", p))
 	case zapcore.ErrorLevel:
-		g_logger.Error("", zap.String("component", l.Component), zap.ByteString("msg", p))
+		ZLogger.Error("", zap.String("comp", l.Name), zap.ByteString("msg", p))
 	case zapcore.FatalLevel:
-		g_logger.Fatal("", zap.String("component", l.Component), zap.ByteString("msg", p))
+		ZLogger.Fatal("", zap.String("comp", l.Name), zap.ByteString("msg", p))
 	}
 
 	return
+}
+
+func (l *CompLogger)SetLevel(level string)  {
+	if zl, ok :=  LevelMap[level]; ok {
+		l.zapLevel = zl
+	}
 }

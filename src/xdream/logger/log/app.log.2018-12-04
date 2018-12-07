@@ -1,0 +1,3 @@
+{"level":"info","ts":1543921887.250602,"msg":"This is info log","app":"log-demo"}
+{"level":"warn","ts":1543921887.2516363,"msg":"This is warn log","app":"log-demo"}
+{"level":"error","ts":1543921887.2516649,"msg":"This is error log","app":"log-demo"}

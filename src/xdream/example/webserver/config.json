@@ -1,0 +1,38 @@
+{
+  "app_log":{
+    "common_field":{
+      "app":"log-demo"
+    },
+    "log_dir":"./log",
+    "routes":[
+      {
+        "type":"file",
+        "format":"json",
+        "file_name":"app.log",
+        "rotate":"day",
+        "level_key":"app",
+        "level":"info"
+      },
+      {
+        "type":"file",
+        "format":"json",
+        "file_name":"error.log",
+        "rotate":"day",
+        "level":"warn"
+      },
+      {
+        "type":"console",
+        "format":"simple",
+        "level_key":"console",
+        "level":"info"
+      }
+    ]
+
+  },
+  "comp_log":{
+    "iris":{
+      "enabled":true,
+      "level":"info"
+    }
+  }
+}

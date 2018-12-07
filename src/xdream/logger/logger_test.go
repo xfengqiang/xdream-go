@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/jonboulle/clockwork"
 	"os"
+	"go.uber.org/zap/zapcore"
 )
 
 func setupLogger(cfgStr string, t *testing.T)  {
@@ -35,29 +36,29 @@ var cfgStr string = `{
 			"format":"json",
 			"file_name":"app.log",
 			"rotate":"day",
-			"level":0
+			"level":"info"
 		},
 		{
 			"type":"file",
 			"format":"json",
 			"file_name":"error.log",
 			"rotate":"day",
-			"level":1
+			"level":"error"
 		},
 		{
 			"type":"console",
 			"format":"simple",
-			"level":0
+			"level":"info"
 		}
 	]
 }`
 
 	setupLogger(cfgStr, t)
 
-	g_logger.Info("This is info log")
-	g_logger.Warn("This is warn log")
-	g_logger.Error("This is error log")
-	g_logger.Sugar()
+	ZLogger.Info("This is info log")
+	ZLogger.Warn("This is warn log")
+	ZLogger.Error("This is error log")
+	ZLogger.Sugar()
 }
 
 func TestRemoveFile(t *testing.T)  {
@@ -72,7 +73,7 @@ func TestRemoveFile(t *testing.T)  {
 			"format":"json",
 			"file_name":"app.log",
 			"rotate":"none",
-			"level":0
+			"level":"info"
 		}
 	]
 }`
@@ -85,7 +86,7 @@ func TestRemoveFile(t *testing.T)  {
 		select {
 		case <-ticker.C:
 			log.Println("write log", cnt)
-			g_logger.Info("log cnt ", zap.Int("cnt", cnt))
+			ZLogger.Info("log cnt ", zap.Int("cnt", cnt))
 		}
 	}
 }
@@ -192,3 +193,52 @@ func TestHourRotate(t *testing.T)  {
 		}
 	}
 }
+
+func TestComponent(t *testing.T)  {
+	var cfgStr string = `{
+	"routes":[
+		{
+			"type":"console",
+			"level":"info"
+		}
+	]
+}`
+
+	setupLogger(cfgStr, t)
+
+	logger := &CompLogger{
+		Name:"iris",
+		Enabled:true,
+		Level: zapcore.InfoLevel,
+	}
+
+	log.SetOutput(logger)
+	log.Println("test compnent log")
+
+}
+func TestLevelSet(t *testing.T)  {
+	var cfgStr string = `{
+	"common_field":{
+		"app":"log-demo"
+	},
+	"log_dir":"./log",
+	"routes":[
+		{
+			"type":"console",
+			"format":"json",
+			"level":"info",
+			"level_key":"default"
+		}
+	]
+}`
+
+	setupLogger(cfgStr, t)
+	ZLogger.Debug("debug msg, should hide")
+	ZLogger.Info("info msg, should show")
+
+	SetLevel("default", zapcore.DebugLevel)
+	ZLogger.Debug("debug msg, should show")
+}
+
+
+

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/kataras/iris"
 	"xdream/example/webserver/middleware"
+	"xdream/logger"
 )
 
 type IndexController struct {
@@ -43,6 +44,15 @@ func (c *IndexController)GetHello() ( mvc.Result) {
 	res.User.Name = "fank xu"
 	c.cnt++
 	return c.ObjectResponse(res)
+}
+
+func (c *IndexController)GetLog() ( mvc.Result) {
+	web.App.Logger().Debugf("[iris] debug msg")
+	web.App.Logger().Info("[iris] info msg")
+
+	logger.ZLogger.Debug("[zap] debug msg")
+	logger.ZLogger.Info("[zap] info msg")
+	return c.ObjectResponse(web.RespInfo{})
 }
 
 func (c *IndexController)GetPanic()  {

@@ -9,12 +9,65 @@ import (
 	"strconv"
 	"runtime"
 	"xdream/example/webserver/middleware"
+	"flag"
+	"encoding/json"
+	"io/ioutil"
+	"xdream/xutil"
+	"log"
+	"xdream/logger"
 )
 
+func loadConfig(configPath string )  {
+	content, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		panic("read config error "+err.Error())
+	}
+	err = json.Unmarshal(content, &web.AppConfig)
+	if err != nil  {
+		panic("decode config file fail."+"see "+configPath+" " + xutil.JsonStringError(string(content), err))
+	}
 
+	log.Println(web.AppConfig)
+}
+
+func initLogger()  {
+	logger.InitLogger(&web.AppConfig.AppLog)
+	if lg, ok := web.AppConfig.CompLog["iris"]; ok {
+
+		logComp := lg
+		logComp.SetLevel(lg.Level) //这里需要初始化一下
+
+		ls := logger.NewLevelSetter(lg.Level, func(level string) {
+			// "disable"
+			// "fatal"
+			// "error"
+			// "warn"
+			// "info"
+			// "debug"
+
+			//同时设置logComp和web.App.Logger(),保证性能
+			if level=="disable" {
+				logComp.Enabled = false
+			}else{
+				logComp.Enabled = true
+				lg.SetLevel(level)
+			}
+			web.App.Logger().SetLevel(level)
+		})
+
+		logger.RegisterLevelSetter("iris", ls)
+		log.SetOutput(logComp)
+	}
+}
 func main() {
-	web.App.Logger().SetOutput()
-	web.App.Logger().Warnf()
+
+	configPath := flag.String("c", "config.json", "path to config file")
+	flag.Parse()
+
+	//解析配置文件
+	loadConfig(*configPath)
+	//初始化日志组件
+	initLogger()
 
 	//自定义panic处理函数
 	web.App.Use(myrecover())
@@ -22,7 +75,6 @@ func main() {
 
 	//初始化路由配置，必须在app.Use后面执行，否则自定义panic处理函数不生效
 	web.InitRoutes()
-	web.App.Logger().SetLevel("debug")
 	web.App.Get("/panic", func(i context.Context) {
 		panic("abc")
 	})
