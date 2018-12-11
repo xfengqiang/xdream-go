@@ -40,7 +40,7 @@ func (c *IndexController)GetHello() ( mvc.Result) {
 	res := api.UserInfo{}
 	res.RespInfo.Code = 100
 	res.RespInfo.Msg = fmt.Sprintf("ok:%d", c.cnt)
-	res.User.Id = 1
+	res.User.Id = "abc"
 	res.User.Name = "fank xu"
 	c.cnt++
 	return c.ObjectResponse(res)

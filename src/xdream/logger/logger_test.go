@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"github.com/jonboulle/clockwork"
 	"os"
-	"go.uber.org/zap/zapcore"
 )
 
 func setupLogger(cfgStr string, t *testing.T)  {
@@ -209,7 +208,7 @@ func TestComponent(t *testing.T)  {
 	logger := &CompLogger{
 		Name:"iris",
 		Enabled:true,
-		Level: zapcore.InfoLevel,
+		Level: "info",
 	}
 
 	log.SetOutput(logger)
@@ -236,9 +235,26 @@ func TestLevelSet(t *testing.T)  {
 	ZLogger.Debug("debug msg, should hide")
 	ZLogger.Info("info msg, should show")
 
-	SetLevel("default", zapcore.DebugLevel)
+	SetLevel("default", "debug")
 	ZLogger.Debug("debug msg, should show")
 }
 
+func TestSugar(t *testing.T)  {
+	var cfgStr string = `{
+	"routes":[
+		{
+			"format":"json",
+			"type":"console",
+			"level":"info"
+		}
+	]
+}`
+
+	setupLogger(cfgStr, t)
+	ZLogger.Sugar().With(zap.String("key", "v")).Info("abcd")
+	ctx := &Context{RefId:"1"}
+	SInfo(ctx, "aaaa")
+	SInfof(ctx, "abcd")
+}
 
 

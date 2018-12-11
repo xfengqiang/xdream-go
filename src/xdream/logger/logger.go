@@ -97,3 +97,80 @@ func FushLog()  {
 	}
 }
 
+
+type Context struct {
+	ReqId string
+	RefId string
+	LogId string
+}
+
+func ctxToLogFields(ctx *Context) []zapcore.Field  {
+	if ctx == nil {
+		return nil
+	}
+	//TODO 这里有优化的空间，可以缓存变量，避免重复创建
+	return []zapcore.Field{zap.String("reqid", ctx.ReqId), zap.String("refid", ctx.RefId), zap.String("logid",  ctx.LogId)}
+}
+
+func ctxToLogInterface(ctx *Context) []interface{}  {
+	if ctx == nil {
+		return nil
+	}
+	//TODO 这里有优化的空间，可以缓存变量，避免重复创建
+	return []interface{}{zap.String("reqid", ctx.ReqId), zap.String("refid", ctx.RefId), zap.String("logid",  ctx.LogId)}
+}
+
+
+//method with ctx
+func Debug(ctx *Context, msg string, fields ...zapcore.Field)  {
+	ZLogger.Debug(msg, append(ctxToLogFields(ctx), fields...)...)
+}
+func Info(ctx *Context, msg string, fields ...zapcore.Field)  {
+	ZLogger.Info(msg, append(ctxToLogFields(ctx), fields...)...)
+}
+func Warn(ctx *Context, msg string, fields ...zapcore.Field)  {
+	ZLogger.Warn(msg, append(ctxToLogFields(ctx), fields...)...)
+}
+func Error(ctx *Context, msg string, fields ...zapcore.Field)  {
+	ZLogger.Error(msg, append(ctxToLogFields(ctx), fields...)...)
+}
+func Fatal(ctx *Context, msg string, fields ...zapcore.Field)  {
+	ZLogger.Fatal(msg, append(ctxToLogFields(ctx), fields...)...)
+}
+
+//sugar log methods
+func SDebug(ctx *Context,fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Debug(fields...)
+}
+
+func SInfo(ctx *Context,fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Info(fields...)
+}
+
+func SWarn(ctx *Context,fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Warn(fields...)
+}
+
+func SError(ctx *Context,fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Error(fields...)
+}
+
+func SFatal(ctx *Context,fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Fatal(fields...)
+}
+
+func SDebugf(ctx *Context,template string, fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Debugf(template, fields...)
+}
+func SInfof(ctx *Context,template string, fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Infof(template, fields...)
+}
+func SWarnf(ctx *Context,template string, fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Warnf(template, fields...)
+}
+func SErrorf(ctx *Context,template string, fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Errorf(template, fields...)
+}
+func SFatalf(ctx *Context,template string, fields...interface{})  {
+	ZLogger.Sugar().With(ctxToLogInterface(ctx)...).Fatalf(template, fields...)
+}

@@ -2,7 +2,6 @@ package logger
 
 import (
 	"go.uber.org/zap/zapcore"
-	"log"
 )
 
 var LevelMap map[string]zapcore.Level = map[string]zapcore.Level{
@@ -62,7 +61,7 @@ var levelLevelSetter map[string]*LevelSetter = map[string]*LevelSetter{}
 
 
 func RegisterLevelSetter(key string, ls *LevelSetter)  {
-	log.Println("register log level setter:", key)
+	//log.Println("register log level setter:", key)
 	levelLevelSetter[key] = ls
 }
 

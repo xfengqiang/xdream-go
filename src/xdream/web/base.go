@@ -45,3 +45,12 @@ func RegisterController(controller interface{}, path string, handlers ... contex
 		Handlers:handlers,
 	}
 }
+
+func RegisterGet(path string, fn func(*Context))  {
+	App.Get(path, WrapHandler(fn))
+}
+
+func RegisterPost(path string, fn func(*Context))  {
+	App.Post(path, WrapHandler(fn))
+}
+
